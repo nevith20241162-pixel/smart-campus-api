@@ -9,19 +9,30 @@ This project uses a lightweight embedded Grizzly server, meaning no standalone T
 1. Open the project folder in your IDE (e.g., VS Code).
 2. Ensure you have Java 11 (or higher) and Maven installed.
 3. Navigate to `src/main/java/com/smartcampus/Main.java`.
-4. Run the `Main` class. 
+4. Run the `Main` class.
 5. The server will start instantly and listen on: `http://localhost:8080/api/v1/`
 
-##  Testing the Endpoints
+## Sample `curl` Commands
 
-You can test the API using Postman or your browser. Here are the core endpoints:
+# 1. API Discovery
 
-* **Discovery:** `GET http://localhost:8080/api/v1/`
-* **Get All Rooms:** `GET http://localhost:8080/api/v1/rooms`
-* **Create Room:** `POST http://localhost:8080/api/v1/rooms`
-* **Get Sensors (Optional Filter):** `GET http://localhost:8080/api/v1/sensors?type=CO2`
-* **Create Sensor:** `POST http://localhost:8080/api/v1/sensors`
-* **Add Sensor Reading:** `POST http://localhost:8080/api/v1/sensors/{sensorId}/readings`
+curl -X GET http://localhost:8080/api/v1/
+
+# 2. Get All Rooms
+
+curl -X GET http://localhost:8080/api/v1/rooms
+
+# 3. Create a New Room
+
+curl -X POST http://localhost:8080/api/v1/rooms -H "Content-Type: application/json" -d "{\"name\": \"Tech Lab\", \"capacity\": 30}"
+
+# 4. Filter Sensors by Type
+
+curl -X GET "http://localhost:8080/api/v1/sensors?type=CO2"
+
+# 5. Add a Sensor Reading
+
+curl -X POST http://localhost:8080/api/v1/sensors/SENS-123/readings -H "Content-Type: application/json" -d "{\"value\": 415.5}"
 
 ---
 
@@ -62,7 +73,7 @@ The Sub-Resource Locator pattern enforces the principle of Separation of Concern
 A 404 Not Found semantically implies that the target URL endpoint itself does not exist. Conversely, an HTTP 422 Unprocessable Entity accurately communicates that the server successfully reached the endpoint and the JSON payload syntax was perfectly valid, but the business logic failed to process it because of a logical error inside the data (such as referencing a `roomId` that isn't in the system).
 
 **Q: From a cybersecurity standpoint, explain the risks associated with exposing internal Java stack traces to external API consumers. What specific information could an attacker gather from such a trace?**
-Exposing internal Java stack traces leaks sensitive architectural blueprints to potential attackers. An attacker can read the trace to identify exactly what frameworks the server is running, the specific versions of libraries in use (which can be cross-referenced with known CVE vulnerabilities), database connection structures, and internal file paths, essentially providing them with a roadmap to construct targeted exploits. 
+Exposing internal Java stack traces leaks sensitive architectural blueprints to potential attackers. An attacker can read the trace to identify exactly what frameworks the server is running, the specific versions of libraries in use (which can be cross-referenced with known CVE vulnerabilities), database connection structures, and internal file paths, essentially providing them with a roadmap to construct targeted exploits.
 
 **Q: Why is it advantageous to use JAX-RS filters for cross-cutting concerns like logging, rather than manually inserting Logger.info() statements inside every single resource method?**
 Using JAX-RS filters centralizes cross-cutting concerns, preventing code duplication. If logging is inserted manually into every resource method, it pollutes the core business logic, creating messy code that is incredibly tedious to update. A centralized filter guarantees that every single request and response is automatically caught and logged uniformly across the entire API, without the developer having to remember to add it to new endpoints.
