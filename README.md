@@ -14,7 +14,7 @@ This project uses a lightweight embedded Grizzly server, meaning no standalone T
 
 ## Sample `curl` Commands
 
-# 1. API Discovery
+ 1. API Discovery
 
 curl -X GET http://localhost:8080/api/v1/
 
