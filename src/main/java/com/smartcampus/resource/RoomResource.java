@@ -61,7 +61,7 @@ public class RoomResource {
             if (room.getId().equals(roomId)) {
 
                 // Business Logic Constraint: Block deletion if sensors are assigned
-                if (!room.getSensorIds().isEmpty()) {
+                if (room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
                     throw new com.smartcampus.exception.RoomNotEmptyException("Cannot delete room: active sensors are still assigned.");
                 }
 
